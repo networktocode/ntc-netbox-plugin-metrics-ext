@@ -1,0 +1,43 @@
+---
+language: python
+python:
+- '3.6'
+- '3.7'
+- '3.8'
+env:
+# Each version of NetBox listed here must have a corresponding directory/configuration file 
+# under development/netbox_<NETBOX_VER>/configuration.py
+  matrix:
+  - NETBOX_VER=v2.8.3
+  - NETBOX_VER=master
+# Encrypted value for PYPI_TOKEN, this secret has been generated with the following command
+#   travis encrypt PYPI_TOKEN=<value> --add env.global --com
+# Might need to update it once the repo is publish (travis-ci.org vs travis-ci.com)
+  # global:
+  #   secure: <Add encrypted token>
+services:
+- docker
+# --------------------------------------------------------------------------
+# Tests
+# --------------------------------------------------------------------------
+before_script:
+- pip install invoke docker-compose
+- curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py > /tmp/get-poetry.py
+- python /tmp/get-poetry.py -y --version 1.0.2
+- source $HOME/.poetry/env
+
+script:
+- invoke build --python-ver $TRAVIS_PYTHON_VERSION
+- invoke tests --python-ver $TRAVIS_PYTHON_VERSION
+# --------------------------------------------------------------------------
+# Deploy
+# --------------------------------------------------------------------------
+deploy:
+  provider: script
+  script: poetry config pypi-token.pypi $PYPI_TOKEN && poetry publish --build
+  skip_cleanup: true
+  on:
+    tags: true
+    branch: master
+    condition: $NETBOX_VER = master
+    python: 3.7

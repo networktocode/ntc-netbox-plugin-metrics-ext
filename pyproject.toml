@@ -1,0 +1,60 @@
+[tool.poetry]
+name = "ntc-netbox-plugin-app-metrics"
+version = "0.1.0"
+description = "Plugin to expose application level metrics using open telemetry format/prometheus"
+authors = ["Network to Code, LLC <info@networktocode.com>"]
+
+license = "Apache-2.0"
+
+readme = "README.md"
+homepage = "https://github.com/networktocode/ntc-netbox-plugin-app-metrics"
+repository = "https://github.com/networktocode/ntc-netbox-plugin-app-metrics"
+keywords = ["netbox", "netbox-plugin"]
+include = [
+
+    "LICENSE",
+
+    "README.md",
+]
+packages = [
+    { include = "netbox_app_metrics" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+invoke = "^1.4.1"
+
+[tool.poetry.dev-dependencies]
+black = "^19.10b0"
+yamllint = "^1.23.0"
+bandit = "^1.6.2"
+pylint = "^2.5.2"
+pylint-django = "^2.0.15"
+pydocstyle = "^5.0.2"
+
+[tool.black]
+line-length = 120
+target-version = ['py36']
+include = '\.pyi?$'
+exclude = '''
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+  )/
+  | settings.py     # This is where you define files that should not be stylized by black
+                     # the root of the project
+)
+'''
+[build-system]
+requires = ["poetry>=0.12"]
+build-backend = "poetry.masonry.api"
+
