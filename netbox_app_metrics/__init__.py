@@ -11,7 +11,7 @@ __REGISTRY__ = []
 
 
 def register_metric_func(func):
-    """Register additional function to generate application metrics
+    """Register an additional function to generate application metrics.
 
     Args:
         func: python function, taking no argument that return a list of Prometheus Metric Object

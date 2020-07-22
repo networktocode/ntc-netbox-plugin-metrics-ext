@@ -1,19 +1,16 @@
+"""Test cases for netbox_app_metrics metric function registry."""
 from django.test import TestCase
 from netbox_app_metrics import register_metric_func, __REGISTRY__
 
 
-class registryTests(TestCase):
-    """
-    Test cases for ensuring the registry is working properly
-    """
+class RegistryTests(TestCase):
+    """Test cases for ensuring the registry is working properly."""
 
     def test_register_metric_func(self):
-        """
-        Ensures the function to add function to the registry is working properly
-        """
+        """Ensure the function to add functions to the registry is working properly."""
 
         def myfunction():
-            pass
+            """Dummy metric function."""
 
         self.assertRaises(TypeError, register_metric_func, "test")
         self.assertRaises(TypeError, register_metric_func, dict(test="test"))
