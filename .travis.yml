@@ -12,9 +12,8 @@ env:
   - NETBOX_VER=master
 # Encrypted value for PYPI_TOKEN, this secret has been generated with the following command
 #   travis encrypt PYPI_TOKEN=<value> --add env.global --com
-# Might need to update it once the repo is publish (travis-ci.org vs travis-ci.com)
-  # global:
-  #   secure: <Add encrypted token>
+  global:
+    secure: B1Lzxn1keOZowWRMWQXuR7buoPVSdMPmzJsrGScD1iaYNOiqa9/s3c/g9VsBHo2hmGgxaVtyM2pRSxNnstcKFBDkMt+WL1wNjwObKM92LS47y/XOM0Ux3g/LaFEaILWJ6pS6M1Hkz3YVFYvSRVqCaq85scdFBxaNTCe2mayysgHPC2Z+Qo3jbHi4l4FHL0nlkJm1hmTUnFogtlurlFMlGFkCZ6sMH9AzW0DpDIz0fzwP/V81CtoBDJd/4GnzCohxKS1WAR9q6eZH/pVnRmn0W4GV9ne0RJcQSGrxOLVsIQDMDbxZd3/terollLIQZ996eIfor2ozyR2SNL6CczkoHE941pARCzLo8jV9NZFahGtjYjh8oO6jQ6cYkJnSCWIzwxTOjW1mt1ipGHswgtjOJ9aIfN5NfMTDTZmF+duZhaib61L2tc877A27nNLGXXKN69OlEgEyyNPO3jfXe/CdRqYjgDXlhJAU52J+6TqRpjWftxGoO2LtE8NXzYIyUH59NKyiNqWm4skNIk4I9JdTXh++svuRcvuU0k0nFbOwZI5Q8prRqQAM/l6tbc+j8eHGnXQOoSMstuZOnhWn1mgSa1/cCGl6sA+gmYP3/5dn9spbwqqIG5gc77lJ2LZnOaVCiRJYKSov/it5BkY0hZlugKYFfptzmwI4ru6wZWndYQQ=
 services:
 - docker
 # --------------------------------------------------------------------------
