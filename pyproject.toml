@@ -1,19 +1,15 @@
 [tool.poetry]
 name = "ntc-netbox-plugin-app-metrics"
 version = "0.1.0"
-description = "Plugin to expose application level metrics using open telemetry format/prometheus"
+description = "Plugin to expose application level metrics using prometheus format"
 authors = ["Network to Code, LLC <info@networktocode.com>"]
-
 license = "Apache-2.0"
-
 readme = "README.md"
 homepage = "https://github.com/networktocode/ntc-netbox-plugin-app-metrics"
 repository = "https://github.com/networktocode/ntc-netbox-plugin-app-metrics"
 keywords = ["netbox", "netbox-plugin"]
 include = [
-
     "LICENSE",
-
     "README.md",
 ]
 packages = [
