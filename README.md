@@ -1,6 +1,91 @@
 # ntc-netbox-plugin-app-metrics
 
-A plugin for [NetBox](https://github.com/netbox-community/netbox).
+A plugin for [NetBox](https://github.com/netbox-community/netbox) to expose additional metrics information via a new prometheus endpoint at (`/api/plugins/app-metrics/`)
+
+NetBox already exposed some information via a Prometheus endpoint but the information currently available are mostly at the system level and not at the application level. 
+- **SYSTEM Metrics** are very useful to instrument code, track ephemeral information and get a better visibility into what is happening. (Example of metrics: nbr of requests, requests per second, nbr of exceptions, response time, etc ...) The idea is that if we have multiple NetBox instances running behind a load balancer each one will produce a different set of metrics and the monitoring system needs to collect these metrics from all running instances and aggregate them in a dashboard. NetBox exposes some system metrics by default at `localhost/metrics`.
+- **APPLICATION Metrics** are at a higher level and represent information that is the same across all instances of an application running behind a load balancer. if I have 3 instances of NetBox running, there is no point to ask each of them how many Device objects I have in the database, since they will always return the same information. In this case, the goal is to expose only 1 endpoint that can be served by any running instance.
+
+System metrics and application level metrics are complementary with each other
+
+Currently the plugin exposes these simple stats by default:
+- RQ queues stats
+- Reports stats
+- Models count (configurable via configuration.py)
+
+## Add your own metrics
+
+This plugin offer some options to generate and publish your own application metrics behind the same endpoint.
+
+### Option 1 - Register function(s) via configuration.py.
+
+it's possible to create your own function to generate some metrics and register it to the plugin in the configuration.py
+
+```python
+# metrics.py
+from prometheus_client.core import GaugeMetricFamily
+
+def metric_prefix_utilization():
+    """Report prefix utilization as a metric per container."""
+    from ipam.models import Prefix  # pylint: disable=import-outside-toplevel
+
+    containers = Prefix.objects.filter(status="container").all()
+    g = GaugeMetricFamily(
+        "netbox_prefix_utilization", "percentage of utilization per container prefix", labels=["prefix", "role", "site"]
+    )
+
+    for container in containers:
+
+        site = "none"
+        role = "none"
+        if container.role:
+            role = container.role.slug
+
+        if container.site:
+            site = container.site.slug
+
+        g.add_metric(
+            [str(container.prefix), site, role], container.get_utilization(),
+        )
+
+    yield g
+```
+
+'''
+# configuration.py
+from .metrics import metric_prefix_utilization
+PLUGINS_CONFIG = {
+    "netbox_app_metrics": {
+        "extras": [
+             metric_prefix_utilization
+        ]
+},
+'''
+
+### Option 2 - Registry for third party plugins
+
+Any plugin can include its own metrics to improve the visibility and/or the troubleshooting of the plugin itself.
+Third party plugins can register their own function(s) using the ready() function as part of their PluginConfig class.
+
+```python
+# my_plugin/__init__.py
+from netbox_app_metrics import register_metric_func
+from .metrics import metric_circuit_bandwidth
+
+class MyPluginConfig(PluginConfig):
+    name = "netbox_myplugin"
+    verbose_name = "Demo Plugin "
+    # [ ... ]
+    def ready(self):
+        super().ready()
+        register_metric_func(metric_circuit_bandwidth)
+```
+
+### Option 3 - NOT AVAILABLE YET - Metrics directory
+
+In the future it will be possible to add metrics by adding them in a predefined directory, similar to reports and scripts.
+
+
 
 ## Installation
 
@@ -31,13 +116,28 @@ PLUGINS = ["netbox_app_metrics"]
 
 The plugin behavior can be controlled with the following list of settings
 
-- TODO
-
+- `reports` boolean (default True), publish stats about the reports (success, warning, info, failure)
+- `queues` boolean (default True), publish stats about RQ Worker (nbr and type of job in the different queues) 
+- `models` nested dict, publish the count for a given object (Nbr Device, Nbr IP etc.. ). The first level must be the name of the module in lowercase (dcim, ipam etc..) the second level must be the name of the object( usually starting with a uppercase) 
+    ```python
+    {
+      "dcim": {"Site": True, "Rack": True, "Device": True,}, 
+      "ipam": {"IPAddress": True, "Prefix": True}
+    }
+    ```
 ## Usage
 
-### API
+Configure your prometheus server to collect the application metrics at `/api/plugins/app-metrics/`
 
-TODO
+```yaml
+# Sample prometheus configuration
+scrape_configs:
+  - job_name: 'netbox_app'
+    scrape_interval: 60s
+    metrics_path: /api/plugins/app_metrics/
+    static_configs:
+      - targets: ['netbox']
+```
 
 ## Contributing
 
@@ -87,6 +187,36 @@ Each command can be executed with `invoke <command>`. All commands support the a
 For any questions or comments, please check the [FAQ](FAQ.md) first and feel free to swing by the [Network to Code slack channel](https://networktocode.slack.com/) (channel #networktocode).
 Sign up [here](http://slack.networktocode.com/)
 
-## Screenshots
+## Default Metrics 
 
-TODO
+By Default the plugin will generate the following metrics
+```
+# HELP netbox_queue_stats Per RQ queue and job status statistics
+# TYPE netbox_queue_stats gauge
+netbox_queue_stats{name="check_releases",status="finished"} 0.0
+netbox_queue_stats{name="check_releases",status="started"} 0.0
+netbox_queue_stats{name="check_releases",status="deferred"} 0.0
+netbox_queue_stats{name="check_releases",status="failed"} 0.0
+netbox_queue_stats{name="check_releases",status="scheduled"} 0.0
+netbox_queue_stats{name="default",status="finished"} 0.0
+netbox_queue_stats{name="default",status="started"} 0.0
+netbox_queue_stats{name="default",status="deferred"} 0.0
+netbox_queue_stats{name="default",status="failed"} 0.0
+netbox_queue_stats{name="default",status="scheduled"} 0.0
+# HELP netbox_report_stats Per report statistics
+# TYPE netbox_report_stats gauge
+netbox_report_stats{name="test_hostname",status="success"} 13.0
+netbox_report_stats{name="test_hostname",status="warning"} 0.0
+netbox_report_stats{name="test_hostname",status="failure"} 0.0
+netbox_report_stats{name="test_hostname",status="info"} 0.0
+# HELP netbox_model_count Per NetBox Model count
+# TYPE netbox_model_count gauge
+netbox_model_count{app="dcim",name="Site"} 24.0
+netbox_model_count{app="dcim",name="Rack"} 24.0
+netbox_model_count{app="dcim",name="Device"} 46.0
+netbox_model_count{app="ipam",name="IPAddress"} 58.0
+netbox_model_count{app="ipam",name="Prefix"} 18.0
+# HELP netbox_app_metrics_processing_ms Time in ms to generate the app metrics endpoint
+# TYPE netbox_app_metrics_processing_ms gauge
+netbox_app_metrics_processing_ms 19.90485
+```
