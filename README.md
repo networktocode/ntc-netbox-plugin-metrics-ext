@@ -1,25 +1,26 @@
 # ntc-netbox-plugin-app-metrics
 
-A plugin for [NetBox](https://github.com/netbox-community/netbox) to expose additional metrics information via a new prometheus endpoint at (`/api/plugins/app-metrics/`)
+A plugin for [NetBox](https://github.com/netbox-community/netbox) to expose additional metrics information via a new Prometheus endpoint at (`/api/plugins/app-metrics/`)
 
-NetBox already exposed some information via a Prometheus endpoint but the information currently available are mostly at the system level and not at the application level. 
-- **SYSTEM Metrics** are very useful to instrument code, track ephemeral information and get a better visibility into what is happening. (Example of metrics: nbr of requests, requests per second, nbr of exceptions, response time, etc ...) The idea is that if we have multiple NetBox instances running behind a load balancer each one will produce a different set of metrics and the monitoring system needs to collect these metrics from all running instances and aggregate them in a dashboard. NetBox exposes some system metrics by default at `localhost/metrics`.
-- **APPLICATION Metrics** are at a higher level and represent information that is the same across all instances of an application running behind a load balancer. if I have 3 instances of NetBox running, there is no point to ask each of them how many Device objects I have in the database, since they will always return the same information. In this case, the goal is to expose only 1 endpoint that can be served by any running instance.
+NetBox already exposes some information via a Prometheus endpoint but the information currently available are mostly at the system level and not at the application level.
+- **SYSTEM Metrics** are very useful to instrument code, track ephemeral information and get a better visibility into what is happening. (Example of metrics: nbr of requests, requests per second, nbr of exceptions, response time, etc ...) The idea is that when multiple instances of NetBox are running behind a load balancer each one will produce a different set of metrics and the monitoring system needs to collect these metrics from all running instances and aggregate them in a dashboard. NetBox exposes some system metrics by default at `localhost/metrics`.
+- **APPLICATION Metrics** are at a higher level and represent information that is the same across all instances of an application running behind a load balancer. If I have 3 instances of NetBox running, there is no point to ask each of them how many Device objects I have in the database, since they will always return the same information. In this case, the goal is to expose only 1 endpoint that can be served by any running instance.
 
 System metrics and application level metrics are complementary with each other
 
-Currently the plugin exposes these simple stats by default:
-- RQ queues stats
+Currently the plugin exposes these simple metrics by default:
+- RQ Queues stats
 - Reports stats
 - Models count (configurable via configuration.py)
 
 ## Add your own metrics
 
-This plugin offer some options to generate and publish your own application metrics behind the same endpoint.
+This plugin supports some options to generate and publish your own application metrics behind the same endpoint.
 
 ### Option 1 - Register function(s) via configuration.py.
 
-it's possible to create your own function to generate some metrics and register it to the plugin in the configuration.py
+It's possible to create your own function to generate some metrics and register it to the plugin in the configuration.py.
+Here is an example where the custom function are centralized in a `metrics.py` file, located next to the main `configuration.py`.
 
 ```python
 # metrics.py
@@ -50,8 +51,8 @@ def metric_prefix_utilization():
 
     yield g
 ```
-
-'''
+The new function can be imported in the `configuration.py` file and registered with the plugin.
+```python
 # configuration.py
 from .metrics import metric_prefix_utilization
 PLUGINS_CONFIG = {
@@ -60,12 +61,12 @@ PLUGINS_CONFIG = {
              metric_prefix_utilization
         ]
 },
-'''
+```
 
 ### Option 2 - Registry for third party plugins
 
 Any plugin can include its own metrics to improve the visibility and/or the troubleshooting of the plugin itself.
-Third party plugins can register their own function(s) using the ready() function as part of their PluginConfig class.
+Third party plugins can register their own function(s) using the `ready()` function as part of their PluginConfig class.
 
 ```python
 # my_plugin/__init__.py
@@ -84,8 +85,6 @@ class MyPluginConfig(PluginConfig):
 ### Option 3 - NOT AVAILABLE YET - Metrics directory
 
 In the future it will be possible to add metrics by adding them in a predefined directory, similar to reports and scripts.
-
-
 
 ## Installation
 
@@ -117,8 +116,8 @@ PLUGINS = ["netbox_app_metrics"]
 The plugin behavior can be controlled with the following list of settings
 
 - `reports` boolean (default True), publish stats about the reports (success, warning, info, failure)
-- `queues` boolean (default True), publish stats about RQ Worker (nbr and type of job in the different queues) 
-- `models` nested dict, publish the count for a given object (Nbr Device, Nbr IP etc.. ). The first level must be the name of the module in lowercase (dcim, ipam etc..) the second level must be the name of the object( usually starting with a uppercase) 
+- `queues` boolean (default True), publish stats about RQ Worker (nbr of worker, nbr and type of job in the different queues) 
+- `models` nested dict, publish the count for a given object (Nbr Device, Nbr IP etc.. ). The first level must be the name of the module in lowercase (dcim, ipam etc..), the second level must be the name of the object (usually starting with a uppercase) 
     ```python
     {
       "dcim": {"Site": True, "Rack": True, "Device": True,}, 
@@ -127,7 +126,7 @@ The plugin behavior can be controlled with the following list of settings
     ```
 ## Usage
 
-Configure your prometheus server to collect the application metrics at `/api/plugins/app-metrics/`
+Configure your Prometheus server to collect the application metrics at `/api/plugins/app-metrics/`
 
 ```yaml
 # Sample prometheus configuration
