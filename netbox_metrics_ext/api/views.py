@@ -1,21 +1,18 @@
 """Django views for Prometheus metric collection and reporting."""
 import time
 import logging
-from collections.abc import Iterable
-
-from pydoc import locate
-import prometheus_client
 
 from django.conf import settings
 from django.http import HttpResponse
 
-from prometheus_client.core import CollectorRegistry
+import prometheus_client
+from prometheus_client.core import CollectorRegistry, GaugeMetricFamily
 
 from netbox_metrics_ext import __REGISTRY__
-from netbox_metrics_ext.metrics import collect_extras_metric, metric_reports, metric_models
+from netbox_metrics_ext.metrics import collect_extras_metric, metric_reports, metric_models, metric_rq
 
 logger = logging.getLogger(__name__)
-PLUGIN_SETTINGS = settings.PLUGINS_CONFIG["netbox_metrics_ext"]
+PLUGIN_SETTINGS = settings.PLUGINS_CONFIG["netbox_metrics_ext"]["app_metrics"]
 
 
 class CustomCollector:

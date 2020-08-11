@@ -1,7 +1,15 @@
+"""Metrics libraries for the netbox_metrics_ext plugin."""
+import logging
+import importlib
+
+from collections.abc import Iterable
+
 from prometheus_client.core import Metric, GaugeMetricFamily
 
 from django_rq.utils import get_statistics
 from extras.models import ReportResult
+
+logger = logging.getLogger(__name__)
 
 
 def metric_rq():
@@ -62,8 +70,9 @@ def metric_models(params):
     gauge = GaugeMetricFamily("netbox_model_count", "Per NetBox Model count", labels=["app", "name"])
     for app, _ in params.items():
         for model, _ in params[app].items():
-            model_class = locate(f"{app}.models.{model}")
+            model_class = importlib.import_module(f"{app}.models.{model}")
             gauge.add_metric([app, model], model_class.objects.count())
+
     yield gauge
 
 

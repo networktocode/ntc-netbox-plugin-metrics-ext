@@ -1,4 +1,5 @@
 """Implementation of the Django management "rqworker_prom" command."""
+import sys
 from os import environ
 
 from django_rq.management.commands.rqworker import Command as DjangoRqCommand
@@ -22,9 +23,8 @@ class Command(DjangoRqCommand):
 
     def handle(self, *args, **options):
         """Handler for the rqworker_metrics command."""
-
         if environ.get("prometheus_multiproc_dir") is None:
-            exit(
+            sys.exit(
                 "The mandatory environ variable 'prometheus_multiproc_dir' is not defined, "
                 "please configure it or use the default 'rqworker' command instead."
             )
