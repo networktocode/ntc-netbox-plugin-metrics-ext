@@ -1,6 +1,6 @@
-"""Test cases for netbox_app_metrics metric function registry."""
+"""Test cases for netbox_metrics_ext app metric function registry."""
 from django.test import TestCase
-from netbox_app_metrics import register_metric_func, __REGISTRY__
+from netbox_metrics_ext import register_metric_func, __REGISTRY__
 
 
 class RegistryTests(TestCase):

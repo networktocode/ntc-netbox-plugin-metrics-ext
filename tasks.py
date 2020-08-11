@@ -7,11 +7,11 @@ PYTHON_VER = os.getenv("PYTHON_VER", "3.7")
 NETBOX_VER = os.getenv("NETBOX_VER", "master")
 
 # Name of the docker image/container
-NAME = os.getenv("IMAGE_NAME", "ntc-netbox-plugin-app-metrics")
+NAME = os.getenv("IMAGE_NAME", "ntc-netbox-plugin-metrics-ext")
 PWD = os.getcwd()
 
 COMPOSE_FILE = "development/docker-compose.yml"
-BUILD_NAME = "netbox_app_metrics"
+BUILD_NAME = "netbox_metrics_ext"
 
 
 # ------------------------------------------------------------------------------
@@ -97,7 +97,7 @@ def destroy(context, netbox_ver=NETBOX_VER, python_ver=PYTHON_VER):
         env={"NETBOX_VER": netbox_ver, "PYTHON_VER": python_ver},
     )
     context.run(
-        f"docker volume rm -f {BUILD_NAME}_pgdata_netbox_app_metrics",
+        f"docker volume rm -f {BUILD_NAME}_pgdata_netbox_metrics_ext",
         env={"NETBOX_VER": netbox_ver, "PYTHON_VER": python_ver},
     )
 
@@ -200,7 +200,7 @@ def unittest(context, netbox_ver=NETBOX_VER, python_ver=PYTHON_VER):
     """
     docker = f"docker-compose -f {COMPOSE_FILE} -p {BUILD_NAME} run netbox"
     context.run(
-        f'{docker} sh -c "python manage.py test netbox_app_metrics"',
+        f'{docker} sh -c "python manage.py test netbox_metrics_ext"',
         env={"NETBOX_VER": netbox_ver, "PYTHON_VER": python_ver},
         pty=True,
     )
