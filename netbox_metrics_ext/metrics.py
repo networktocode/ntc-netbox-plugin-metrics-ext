@@ -70,8 +70,14 @@ def metric_models(params):
     gauge = GaugeMetricFamily("netbox_model_count", "Per NetBox Model count", labels=["app", "name"])
     for app, _ in params.items():
         for model, _ in params[app].items():
-            model_class = importlib.import_module(f"{app}.models.{model}")
-            gauge.add_metric([app, model], model_class.objects.count())
+            try:
+                models = importlib.import_module(f"{app}.models")
+                model_class = getattr(models, model)
+                gauge.add_metric([app, model], model_class.objects.count())
+            except ModuleNotFoundError:
+                logger.warning("Unable to find the python library %s.models", app)
+            except AttributeError:
+                logger.warning("Unable to load the module %s from the python library %s.models", model, app)
 
     yield gauge
 
