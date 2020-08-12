@@ -13,7 +13,7 @@ env:
 # Encrypted value for PYPI_TOKEN, this secret has been generated with the following command
 #   travis encrypt PYPI_TOKEN=<value> --add env.global --com
   global:
-    secure: B1Lzxn1keOZowWRMWQXuR7buoPVSdMPmzJsrGScD1iaYNOiqa9/s3c/g9VsBHo2hmGgxaVtyM2pRSxNnstcKFBDkMt+WL1wNjwObKM92LS47y/XOM0Ux3g/LaFEaILWJ6pS6M1Hkz3YVFYvSRVqCaq85scdFBxaNTCe2mayysgHPC2Z+Qo3jbHi4l4FHL0nlkJm1hmTUnFogtlurlFMlGFkCZ6sMH9AzW0DpDIz0fzwP/V81CtoBDJd/4GnzCohxKS1WAR9q6eZH/pVnRmn0W4GV9ne0RJcQSGrxOLVsIQDMDbxZd3/terollLIQZ996eIfor2ozyR2SNL6CczkoHE941pARCzLo8jV9NZFahGtjYjh8oO6jQ6cYkJnSCWIzwxTOjW1mt1ipGHswgtjOJ9aIfN5NfMTDTZmF+duZhaib61L2tc877A27nNLGXXKN69OlEgEyyNPO3jfXe/CdRqYjgDXlhJAU52J+6TqRpjWftxGoO2LtE8NXzYIyUH59NKyiNqWm4skNIk4I9JdTXh++svuRcvuU0k0nFbOwZI5Q8prRqQAM/l6tbc+j8eHGnXQOoSMstuZOnhWn1mgSa1/cCGl6sA+gmYP3/5dn9spbwqqIG5gc77lJ2LZnOaVCiRJYKSov/it5BkY0hZlugKYFfptzmwI4ru6wZWndYQQ=
+    secure: SXqOs5f4RfJJic6H7D6tdrnpXftymdGJCCrDZxcU/I22g+NZLzGJjtSd3dReDlx1tHFnv3lv80OSPqIg/J2xQxCyJThIdi7zfnwqMLJJ3kDIMlwfRZVfmSDXAMmMs87wjuDsJIyDp1omNNEz5GGQb7MNyZqBE12ibQ+dTdKzI8v8+AhQCx0r49hKgbkBIsHYp8ITh2T8x+wNJmfuaQYxd6NzxCXTdR3I3zg2WdAFh+DgHl6rn3mDZoIJJV6cxQd07hUYTRKzvsD/o+2lCsOWHghNUT3CkJEMSwi5TbNdaFNFrEBL2dUSkZmqzjuxZthhtLaZUrjz7B666br98IQqHMsk7sBVRg3HJ4slWjZ0eqpBmsQ7yJtCy6KSkYalTk7TbBVIXvpz586qMBW4KrD2vgUnapKk35Fqz6IVJorNNU9u0ovEEG7HdwtjJ1idkbS3SmHz8OTztrc5aXteHQIGDdGyVZ9XiXdbbZn9uozTAu5QBO1e+qVXWRY4IouQ7hMQfPi+G3C/mXMUVzA5irvHEyLJrh5z1YdxuvpAFAMWKi8ztsJTECu2VNRX1VzeQtycwVhHKHfz1nLo1iDTPN4rZLTx2gthZimWn3OIAReS0nNYMxTlwFq41n03eAVh+JF1YemPDtWFsq4LK6tRBLbEedFZ5QcESpjXMl3TyNawzLo=
 services:
 - docker
 # --------------------------------------------------------------------------
