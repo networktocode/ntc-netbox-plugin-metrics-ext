@@ -1,4 +1,4 @@
-"""Plugin declaration for netbox_app_metrics."""
+"""Plugin declaration for netbox_metrics_ext."""
 
 __version__ = "0.1.0"
 
@@ -24,23 +24,28 @@ def register_metric_func(func):
     __REGISTRY__.append(func)
 
 
-class AppMetricsConfig(PluginConfig):
-    """Plugin configuration for the netbox_app_metrics plugin."""
+class MetricsExtConfig(PluginConfig):
+    """Plugin configuration for the netbox_metrics_ext plugin."""
 
-    name = "netbox_app_metrics"
-    verbose_name = "Application Metrics Plugin"
+    name = "netbox_metrics_ext"
+    verbose_name = "Metrics & Monitoring Extension Plugin"
     version = __version__
     author = "Network to Code, LLC"
-    description = "Plugin to expose application level metrics using open telemetry format/prometheus."
-    base_url = "app-metrics"
+    description = "Plugin to improve the instrumentation of NetBox and expose additional metrics (Application Metrics, RQ Worker)."
+    base_url = "metrics-ext"
     required_settings = []
     min_version = "2.8.1"
     default_settings = {
-        "models": {"dcim": {"Site": True, "Rack": True, "Device": True,}, "ipam": {"IPAddress": True, "Prefix": True}},
-        "reports": True,
-        "queues": True,
+        "app_metrics": {
+            "models": {
+                "dcim": {"Site": True, "Rack": True, "Device": True,},
+                "ipam": {"IPAddress": True, "Prefix": True},
+            },
+            "reports": True,
+            "queues": True,
+        }
     }
     caching_config = {}
 
 
-config = AppMetricsConfig  # pylint:disable=invalid-name
+config = MetricsExtConfig  # pylint:disable=invalid-name

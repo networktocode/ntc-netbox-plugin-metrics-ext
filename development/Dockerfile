@@ -5,6 +5,9 @@ FROM python:${python_ver}
 ARG netbox_ver=master
 ENV PYTHONUNBUFFERED 1
 
+RUN mkdir /prom_cache
+ENV prometheus_multiproc_dir /prom_cache 
+
 RUN mkdir -p /opt
 
 RUN pip install --upgrade pip\

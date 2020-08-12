@@ -1,6 +1,12 @@
-# ntc-netbox-plugin-app-metrics
+# ntc-netbox-plugin-metrics-ext
 
-A plugin for [NetBox](https://github.com/netbox-community/netbox) to expose additional metrics information via a new Prometheus endpoint at (`/api/plugins/app-metrics/`)
+A plugin for [NetBox](https://github.com/netbox-community/netbox) to expose additional metrics information.
+
+The plugin is composed of multiple features that can be used independantly:
+- Application Metrics Endpoint: prometheus endpoint at `/api/plugins/metrics-ext/app-metrics`
+- RQ Worker Metrics Endpoint: prometheus endpoint running on each RQ worker
+
+# Application Metrics Endpoint
 
 NetBox already exposes some information via a Prometheus endpoint but the information currently available are mostly at the system level and not at the application level.
 - **SYSTEM Metrics** are very useful to instrument code, track ephemeral information and get a better visibility into what is happening. (Example of metrics: nbr of requests, requests per second, nbr of exceptions, response time, etc ...) The idea is that when multiple instances of NetBox are running behind a load balancer each one will produce a different set of metrics and the monitoring system needs to collect these metrics from all running instances and aggregate them in a dashboard. NetBox exposes some system metrics at `localhost/metrics` [NetBox DOC](https://netbox.readthedocs.io/en/stable/additional-features/prometheus-metrics/).
@@ -86,35 +92,9 @@ class MyPluginConfig(PluginConfig):
 
 In the future it will be possible to add metrics by adding them in a predefined directory, similar to reports and scripts.
 
-## Installation
+## Parameters
 
-The plugin is available as a Python package in pypi and can be installed with pip
-```shell
-pip install ntc-netbox-plugin-app-metrics
-```
-
-> The plugin is compatible with NetBox 2.8.1 and higher
- 
-To ensure Application Metrics Plugin is automatically re-installed during future upgrades, create a file named `local_requirements.txt` (if not already existing) in the NetBox root directory (alongside `requirements.txt`) and list the `ntc-netbox-plugin-app-metrics` package:
-
-```no-highlight
-# echo ntc-netbox-plugin-app-metrics >> local_requirements.txt
-```
-
-Once installed, the plugin needs to be enabled in your `configuration.py`
-```python
-# In your configuration.py
-PLUGINS = ["netbox_app_metrics"]
-
-# PLUGINS_CONFIG = {
-#   "netbox_app_metrics": {
-#     ADD YOUR SETTINGS HERE
-#   }
-# }
-```
-
-The plugin behavior can be controlled with the following list of settings
-
+The behavior of the app_metrics feature can be controlled with the following list of settings (under `netbox_metrics_ext > app_metrics`):
 - `reports` boolean (default True), publish stats about the reports (success, warning, info, failure)
 - `queues` boolean (default True), publish stats about RQ Worker (nbr of worker, nbr and type of job in the different queues) 
 - `models` nested dict, publish the count for a given object (Nbr Device, Nbr IP etc.. ). The first level must be the name of the module in lowercase (dcim, ipam etc..), the second level must be the name of the object (usually starting with a uppercase) 
@@ -126,19 +106,75 @@ The plugin behavior can be controlled with the following list of settings
     ```
 ## Usage
 
-Configure your Prometheus server to collect the application metrics at `/api/plugins/app-metrics/`
+Configure your Prometheus server to collect the application metrics at `/api/plugins/metrics-ext/app-metrics/`
 
 ```yaml
 # Sample prometheus configuration
 scrape_configs:
   - job_name: 'netbox_app'
     scrape_interval: 60s
-    metrics_path: /api/plugins/app_metrics/
+    metrics_path: /api/plugins/metrics-ext/app-metrics
     static_configs:
       - targets: ['netbox']
 ```
 
-## Contributing
+# RQ Worker Metrics Endpoint
+
+This plugin add a new django management command `rqworker_metrics` that is behaving identically to the default `rqworker` command except that this command also exposes a prometheus endpoint (default port 8001). 
+
+With this endpoint it become possible to instrument the tasks running asyncronously in the worker. 
+
+## Usage
+
+The new command needs to be executed on the worker as a replacement for the default `rqworker`
+```
+python manage.py rqworker_metrics 
+```
+
+The port used to expose the prometheus endpoint can be configured for each worker in CLI.
+```
+python manage.py rqworker_metrics --prom-port 8002
+```
+
+Since the rq-worker is based on a fork model, for this feature to work it''s required to use prometheus in multi processes mode.
+To enable this mode the environment variable `prometheus_multiproc_dir` must be define and point at a valid directory.
+
+# Installation
+
+The plugin is available as a Python package in pypi and can be installed with pip
+```shell
+pip install ntc-netbox-plugin-metrics-ext
+```
+
+> The plugin is compatible with NetBox 2.8.1 and higher
+ 
+To ensure Application Metrics Plugin is automatically re-installed during future upgrades, create a file named `local_requirements.txt` (if not already existing) in the NetBox root directory (alongside `requirements.txt`) and list the `ntc-netbox-plugin-metrics-ext` package:
+
+```no-highlight
+# echo ntc-netbox-plugin-metrics-ext >> local_requirements.txt
+```
+
+Once installed, the plugin needs to be enabled in your `configuration.py`
+```python
+# In your configuration.py
+PLUGINS = ["netbox_metrics_ext"]
+
+# PLUGINS_CONFIG = {
+#   "netbox_metrics_ext": {
+#     "app_metrics": {
+#       "models": {
+#         "dcim": {"Site": True, "Rack": True, "Device": True,},
+#          "ipam": {"IPAddress": True, "Prefix": True},
+#        },
+#        "reports": True,
+#        "queues": True,
+#       }
+#     }
+#   }
+# }
+```
+
+# Contributing
 
 Pull requests are welcomed and automatically built and tested against multiple version of Python and multiple version of NetBox through TravisCI.
 
@@ -186,7 +222,7 @@ Each command can be executed with `invoke <command>`. All commands support the a
 For any questions or comments, please check the [FAQ](FAQ.md) first and feel free to swing by the [Network to Code slack channel](https://networktocode.slack.com/) (channel #networktocode).
 Sign up [here](http://slack.networktocode.com/)
 
-## Default Metrics 
+## Default Metrics for the application metrics endpoint
 
 By Default the plugin will generate the following metrics
 ```
