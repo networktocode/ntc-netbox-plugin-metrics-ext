@@ -100,10 +100,8 @@ The behavior of the app_metrics feature can be controlled with the following lis
 - `models` nested dict, publish the count for a given object (Nbr Device, Nbr IP etc.. ). The first level must be the name of the module in lowercase (dcim, ipam etc..), the second level must be the name of the object (usually starting with a uppercase) 
     ```python
     {
-      "app_metrics": {
-        "dcim": {"Site": True, "Rack": True, "Device": True,}, 
-        "ipam": {"IPAddress": True, "Prefix": True}
-      }
+      "dcim": {"Site": True, "Rack": True, "Device": True,}, 
+      "ipam": {"IPAddress": True, "Prefix": True}
     }
     ```
 ## Usage
@@ -163,7 +161,15 @@ PLUGINS = ["netbox_metrics_ext"]
 
 # PLUGINS_CONFIG = {
 #   "netbox_metrics_ext": {
-#     ADD YOUR SETTINGS HERE
+#     "app_metrics": {
+#       "models": {
+#         "dcim": {"Site": True, "Rack": True, "Device": True,},
+#          "ipam": {"IPAddress": True, "Prefix": True},
+#        },
+#        "reports": True,
+#        "queues": True,
+#       }
+#     }
 #   }
 # }
 ```
