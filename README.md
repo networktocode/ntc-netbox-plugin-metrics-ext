@@ -177,6 +177,12 @@ PLUGINS = ["netbox_metrics_ext"]
 # }
 ```
 
+## Included Grafana Dashboard
+
+Included within this plugin is a Grafana dashboard which will work with the example configuration above. To install this dashboard import the JSON from [Grafana Dashboard](netbox_grafana_dashboard.json) into Grafana.
+
+![Netbox Grafana Dashboard](netbox_grafana_dashboard.png)
+
 # Contributing
 
 Pull requests are welcomed and automatically built and tested against multiple version of Python and multiple version of NetBox through TravisCI.
