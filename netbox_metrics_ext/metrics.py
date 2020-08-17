@@ -1,15 +1,18 @@
 """Metrics libraries for the netbox_metrics_ext plugin."""
 import logging
 import importlib
-
 from collections.abc import Iterable
+from packaging import version
+from django.conf import settings
 
 from prometheus_client.core import Metric, GaugeMetricFamily
 
 from django_rq.utils import get_statistics
-from extras.models import ReportResult
+
 
 logger = logging.getLogger(__name__)
+
+netbox_version = version.parse(settings.VERSION)
 
 
 def metric_rq():
@@ -48,7 +51,17 @@ def metric_reports():
         Iterator[GaugeMetricFamily]
             netbox_report_stats: with report name and status as labels
     """
-    report_results = ReportResult.objects.all()
+    if netbox_version.major >= 2 and netbox_version.minor >= 9:
+        from django.contrib.contenttypes.models import ContentType  # pylint: disable=import-outside-toplevel
+        from extras.models import Report, JobResult  # pylint: disable=import-outside-toplevel,no-name-in-module
+
+        report_results = JobResult.objects.filter(obj_type=ContentType.objects.get_for_model(Report))
+
+    else:
+        from extras.models import ReportResult  # pylint: disable=import-outside-toplevel,no-name-in-module
+
+        report_results = ReportResult.objects.all()
+
     gauge = GaugeMetricFamily("netbox_report_stats", "Per report statistics", labels=["name", "status"])
     for result in report_results:
         for report_name, stats in result.data.items():
