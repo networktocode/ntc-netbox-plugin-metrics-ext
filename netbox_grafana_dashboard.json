@@ -496,7 +496,7 @@
             "pluginVersion": "7.1.1",
             "targets": [
                 {
-                    "expr": "netbox_report_stats\n",
+                    "expr": "sum by(status) (netbox_report_stats)",
                     "interval": "",
                     "legendFormat": "{{status}}",
                     "refId": "A"
