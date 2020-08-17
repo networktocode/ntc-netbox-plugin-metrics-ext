@@ -60,12 +60,15 @@ def metric_prefix_utilization():
 The new function can be imported in the `configuration.py` file and registered with the plugin.
 ```python
 # configuration.py
-from .metrics import metric_prefix_utilization
+from netbox.metrics import metric_prefix_utilization
 PLUGINS_CONFIG = {
-    "netbox_app_metrics": {
+    "netbox_metrics_ext": {
+      "app_metrics": {
         "extras": [
-             metric_prefix_utilization
+          metric_prefix_utilization
         ]
+      }
+    }
 },
 ```
 
@@ -76,8 +79,8 @@ Third party plugins can register their own function(s) using the `ready()` funct
 
 ```python
 # my_plugin/__init__.py
-from netbox_app_metrics import register_metric_func
-from .metrics import metric_circuit_bandwidth
+from netbox_metrics_ext import register_metric_func
+from netbox.metrics import metric_circuit_bandwidth
 
 class MyPluginConfig(PluginConfig):
     name = "netbox_myplugin"
@@ -96,11 +99,11 @@ In the future it will be possible to add metrics by adding them in a predefined 
 
 The behavior of the app_metrics feature can be controlled with the following list of settings (under `netbox_metrics_ext > app_metrics`):
 - `reports` boolean (default True), publish stats about the reports (success, warning, info, failure)
-- `queues` boolean (default True), publish stats about RQ Worker (nbr of worker, nbr and type of job in the different queues) 
-- `models` nested dict, publish the count for a given object (Nbr Device, Nbr IP etc.. ). The first level must be the name of the module in lowercase (dcim, ipam etc..), the second level must be the name of the object (usually starting with a uppercase) 
+- `queues` boolean (default True), publish stats about RQ Worker (nbr of worker, nbr and type of job in the different queues)
+- `models` nested dict, publish the count for a given object (Nbr Device, Nbr IP etc.. ). The first level must be the name of the module in lowercase (dcim, ipam etc..), the second level must be the name of the object (usually starting with a uppercase)
     ```python
     {
-      "dcim": {"Site": True, "Rack": True, "Device": True,}, 
+      "dcim": {"Site": True, "Rack": True, "Device": True,},
       "ipam": {"IPAddress": True, "Prefix": True}
     }
     ```
@@ -120,15 +123,15 @@ scrape_configs:
 
 # RQ Worker Metrics Endpoint
 
-This plugin add a new django management command `rqworker_metrics` that is behaving identically to the default `rqworker` command except that this command also exposes a prometheus endpoint (default port 8001). 
+This plugin add a new django management command `rqworker_metrics` that is behaving identically to the default `rqworker` command except that this command also exposes a prometheus endpoint (default port 8001).
 
-With this endpoint it become possible to instrument the tasks running asyncronously in the worker. 
+With this endpoint it become possible to instrument the tasks running asyncronously in the worker.
 
 ## Usage
 
 The new command needs to be executed on the worker as a replacement for the default `rqworker`
 ```
-python manage.py rqworker_metrics 
+python manage.py rqworker_metrics
 ```
 
 The port used to expose the prometheus endpoint can be configured for each worker in CLI.
@@ -147,7 +150,7 @@ pip install ntc-netbox-plugin-metrics-ext
 ```
 
 > The plugin is compatible with NetBox 2.8.1 and higher
- 
+
 To ensure Application Metrics Plugin is automatically re-installed during future upgrades, create a file named `local_requirements.txt` (if not already existing) in the NetBox root directory (alongside `requirements.txt`) and list the `ntc-netbox-plugin-metrics-ext` package:
 
 ```no-highlight
@@ -174,6 +177,12 @@ PLUGINS = ["netbox_metrics_ext"]
 # }
 ```
 
+## Included Grafana Dashboard
+
+Included within this plugin is a Grafana dashboard which will work with the example configuration above. To install this dashboard import the JSON from [Grafana Dashboard](netbox_grafana_dashboard.json) into Grafana.
+
+![Netbox Grafana Dashboard](netbox_grafana_dashboard.png)
+
 # Contributing
 
 Pull requests are welcomed and automatically built and tested against multiple version of Python and multiple version of NetBox through TravisCI.
@@ -186,7 +195,7 @@ The project is following Network to Code software development guideline and is l
 
 ### CLI Helper Commands
 
-The project is coming with a CLI helper based on [invoke](http://www.pyinvoke.org/) to help setup the development environment. The commands are listed below in 3 categories `dev environment`, `utility` and `testing`. 
+The project is coming with a CLI helper based on [invoke](http://www.pyinvoke.org/) to help setup the development environment. The commands are listed below in 3 categories `dev environment`, `utility` and `testing`.
 
 Each command can be executed with `invoke <command>`. All commands support the arguments `--netbox-ver` and `--python-ver` if you want to manually define the version of Python and NetBox to use. Each command also has its own help `invoke <command> --help`
 
@@ -199,14 +208,14 @@ Each command can be executed with `invoke <command>`. All commands support the a
   stop             Stop NetBox and its dependencies.
 ```
 
-#### Utility 
+#### Utility
 ```
   cli              Launch a bash shell inside the running NetBox container.
   create-user      Create a new user in django (default: admin), will prompt for password.
   makemigrations   Run Make Migration in Django.
   nbshell          Launch a nbshell session.
 ```
-#### Testing 
+#### Testing
 
 ```
   tests            Run all tests for this plugin.
