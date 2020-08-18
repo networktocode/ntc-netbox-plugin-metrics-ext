@@ -16,4 +16,4 @@
 
 ## Does this plugin support NetBox 2.9 ?
 
-> Mostly, everything should work but the reports stats right now. In NetBox 2.9 the way reports are managed internally has changed and the plugin has not been updated yet to support these changes.
+> Yes
