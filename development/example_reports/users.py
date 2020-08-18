@@ -1,6 +1,8 @@
 """This script contains an example of report about users."""
+from django.contrib.auth import get_user_model
 from extras.reports import Report
-from django.contrib.auth.models import User
+
+User = get_user_model()
 
 
 class CheckUser(Report):
@@ -9,8 +11,6 @@ class CheckUser(Report):
     def test_is_uppercase(self):
         """Check that every user has his/her name in lowercase."""
         for user in User.objects.all():
-
-            # Skip if not master of virtual chassis as only master should have primary IP
             if user.username != user.username.lower():
                 self.log_failure(user, f"{user.username} is not in lowercase")
             else:
