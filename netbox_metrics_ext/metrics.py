@@ -49,7 +49,7 @@ def metric_reports():
 
     Return:
         Iterator[GaugeMetricFamily]
-            netbox_report_stats: with report name and status as labels
+            netbox_report_stats: with report module, name and status as labels
     """
     if netbox_version.major >= 2 and netbox_version.minor >= 9:
         from django.contrib.contenttypes.models import ContentType  # pylint: disable=import-outside-toplevel
