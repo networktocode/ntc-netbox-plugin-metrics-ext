@@ -1,6 +1,6 @@
 """Plugin declaration for netbox_metrics_ext."""
 
-__version__ = "0.1.0"
+__version__ = "1.0.0"
 
 from extras.plugins import PluginConfig
 
