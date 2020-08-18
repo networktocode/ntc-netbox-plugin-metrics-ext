@@ -62,11 +62,14 @@ def metric_reports():
 
         report_results = ReportResult.objects.all()
 
-    gauge = GaugeMetricFamily("netbox_report_stats", "Per report statistics", labels=["name", "status"])
+    gauge = GaugeMetricFamily("netbox_report_stats", "Per report statistics", labels=["module", "name", "status"])
     for result in report_results:
+        if not result.data:
+            continue
+
         for report_name, stats in result.data.items():
             for status in ["success", "warning", "failure", "info"]:
-                gauge.add_metric([report_name, status], stats[status])
+                gauge.add_metric([result.name, report_name, status], stats[status])
     yield gauge
 
 
