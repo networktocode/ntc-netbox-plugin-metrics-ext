@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "ntc-netbox-plugin-metrics-ext"
-version = "0.1.0"
+version = "1.0.0"
 description = "Plugin to improve the instrumentation of NetBox and expose additional metrics (Application Metrics, RQ Worker)."
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 license = "Apache-2.0"
