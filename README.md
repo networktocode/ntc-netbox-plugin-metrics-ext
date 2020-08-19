@@ -4,7 +4,7 @@ A plugin for [NetBox](https://github.com/netbox-community/netbox) to expose addi
 
 The plugin is composed of multiple features that can be used independantly:
 - Application Metrics Endpoint: prometheus endpoint at `/api/plugins/metrics-ext/app-metrics`
-- RQ Worker Metrics Endpoint: prometheus endpoint running on each RQ worker
+- RQ Worker Metrics Command: Add prometheus endpoint on each RQ worker
 
 # Application Metrics Endpoint
 
