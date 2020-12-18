@@ -17,8 +17,7 @@ services:
     env_file:
       - ./dev.env
     volumes:
-      - ./base_configuration.py:/opt/netbox/netbox/netbox/base_configuration.py
-      - ./netbox_${NETBOX_VER}/configuration.py:/opt/netbox/netbox/netbox/configuration.py
+      - ./configuration.py:/opt/netbox/netbox/netbox/configuration.py
       - ./example_reports:/opt/netbox/netbox/reports
       - ../netbox_metrics_ext:/source/netbox_metrics_ext
     tty: true
@@ -33,8 +32,7 @@ services:
     env_file:
       - ./dev.env
     volumes:
-      - ./base_configuration.py:/opt/netbox/netbox/netbox/base_configuration.py
-      - ./netbox_${NETBOX_VER}/configuration.py:/opt/netbox/netbox/netbox/configuration.py
+      - ./configuration.py:/opt/netbox/netbox/netbox/configuration.py
       - ./example_reports:/opt/netbox/netbox/reports
       - ../netbox_metrics_ext:/source/netbox_metrics_ext
     tty: true
