@@ -1,11 +1,16 @@
 ---
 version: '3'
 services:
-  netbox:
+  nautobot:
     build:
+      args:
+        GRIMLOCK_VERSION: "${GRIMLOCK_VERSION}"
+        GRIMLOCK_SRC_URL: "${GRIMLOCK_SRC_URL}"
+        nautobot_ver: "${GRIMLOCK_VERSION}"
+        python_ver: "${PYTHON_VER}"
       context: ../
       dockerfile: development/Dockerfile
-    image: "ntc-netbox-plugin-metrics-ext/netbox:${NETBOX_VER}-py${PYTHON_VER}"
+    image: "ntc-nautobot-plugin-metrics-ext/nautobot:${NAUTOBOT_VER}-py${PYTHON_VER}"
     command: >
       sh -c "python manage.py migrate &&
              python manage.py runserver 0.0.0.0:8000"
@@ -17,30 +22,36 @@ services:
     env_file:
       - ./dev.env
     volumes:
-      - ./configuration.py:/opt/netbox/netbox/netbox/configuration.py
-      - ./example_reports:/opt/netbox/netbox/reports
-      - ../netbox_metrics_ext:/source/netbox_metrics_ext
+      - ./configuration.py:/opt/nautobot/netbox/netbox/configuration.py
+      - ./example_reports:/opt/nautobot/netbox/reports
+      - ../nautobot_metrics_ext:/source/nautobot_metrics_ext
+      - ../:/source
     tty: true
   worker:
     build:
+      args:
+        GRIMLOCK_VERSION: "${GRIMLOCK_VERSION}"
+        GRIMLOCK_SRC_URL: "${GRIMLOCK_SRC_URL}"
+        nautobot_ver: "${GRIMLOCK_VERSION}"
+        python_ver: "${PYTHON_VER}"
       context: ../
       dockerfile: development/Dockerfile
-    image: "ntc-netbox-plugin-metrics-ext/netbox:${NETBOX_VER}-py${PYTHON_VER}"
+    image: "ntc-nautobot-plugin-metrics-ext/nautobot:${NAUTOBOT_VER}-py${PYTHON_VER}"
     command: sh -c "python manage.py rqworker"
     depends_on:
-      - netbox
+      - nautobot
     env_file:
       - ./dev.env
     volumes:
-      - ./configuration.py:/opt/netbox/netbox/netbox/configuration.py
-      - ./example_reports:/opt/netbox/netbox/reports
-      - ../netbox_metrics_ext:/source/netbox_metrics_ext
+      - ./configuration.py:/opt/nautobot/netbox/netbox/configuration.py
+      - ./example_reports:/opt/nautobot/netbox/reports
+      - ../nautobot_metrics_ext:/source/nautobot_metrics_ext
     tty: true
   postgres:
     image: postgres:10
     env_file: dev.env
     volumes:
-      - pgdata_netbox_metrics_ext:/var/lib/postgresql/data
+      - pgdata_nautobot_metrics_ext:/var/lib/postgresql/data
   redis:
     image: redis:5-alpine
     command:
@@ -49,4 +60,4 @@ services:
       - redis-server --appendonly yes --requirepass $$REDIS_PASSWORD  ## $$ because of docker-compose
     env_file: ./dev.env
 volumes:
-  pgdata_netbox_metrics_ext:
+  pgdata_nautobot_metrics_ext:

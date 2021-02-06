@@ -56,7 +56,7 @@
             }
         ]
     },
-    "description": "Netbox Application Dashboard",
+    "description": "Nautobot Application Dashboard",
     "editable": true,
     "gnetId": null,
     "graphTooltip": 0,
@@ -106,7 +106,7 @@
             "pluginVersion": "7.1.1",
             "targets": [
                 {
-                    "expr": "netbox_model_count{name=\"Site\"}",
+                    "expr": "nautobot_model_count{name=\"Site\"}",
                     "interval": "",
                     "legendFormat": "",
                     "refId": "A"
@@ -161,7 +161,7 @@
             "pluginVersion": "7.1.1",
             "targets": [
                 {
-                    "expr": "netbox_model_count{name=\"Device\"}",
+                    "expr": "nautobot_model_count{name=\"Device\"}",
                     "interval": "",
                     "legendFormat": "",
                     "refId": "A"
@@ -216,7 +216,7 @@
             "pluginVersion": "7.1.1",
             "targets": [
                 {
-                    "expr": "netbox_model_count{name=\"Rack\"}",
+                    "expr": "nautobot_model_count{name=\"Rack\"}",
                     "interval": "",
                     "legendFormat": "",
                     "refId": "A"
@@ -271,7 +271,7 @@
             "pluginVersion": "7.1.1",
             "targets": [
                 {
-                    "expr": "netbox_model_count{name=\"Prefix\"}",
+                    "expr": "nautobot_model_count{name=\"Prefix\"}",
                     "interval": "",
                     "legendFormat": "",
                     "refId": "A"
@@ -326,7 +326,7 @@
             "pluginVersion": "7.1.1",
             "targets": [
                 {
-                    "expr": "netbox_model_count{name=\"IPAddress\"}",
+                    "expr": "nautobot_model_count{name=\"IPAddress\"}",
                     "interval": "",
                     "legendFormat": "",
                     "refId": "A"
@@ -383,7 +383,7 @@
             "repeat": null,
             "targets": [
                 {
-                    "expr": "netbox_app_metrics_processing_ms",
+                    "expr": "nautobot_app_metrics_processing_ms",
                     "interval": "",
                     "legendFormat": "",
                     "refId": "A"
@@ -496,7 +496,7 @@
             "pluginVersion": "7.1.1",
             "targets": [
                 {
-                    "expr": "sum by(status) (netbox_report_stats)",
+                    "expr": "sum by(status) (nautobot_report_stats)",
                     "interval": "",
                     "legendFormat": "{{status}}",
                     "refId": "A"
@@ -632,7 +632,7 @@
             "pluginVersion": "7.1.1",
             "targets": [
                 {
-                    "expr": "netbox_queue_number_jobs{name=\"default\"}",
+                    "expr": "nautobot_queue_number_jobs{name=\"default\"}",
                     "format": "time_series",
                     "instant": false,
                     "interval": "",
@@ -727,7 +727,7 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "netbox_report_stats\n",
+                    "expr": "nautobot_report_stats\n",
                     "interval": "",
                     "legendFormat": "{{status}}",
                     "refId": "A"
@@ -936,7 +936,7 @@
             "steppedLine": false,
             "targets": [
                 {
-                    "expr": "netbox_queue_number_jobs{name=\"default\"}",
+                    "expr": "nautobot_queue_number_jobs{name=\"default\"}",
                     "format": "time_series",
                     "instant": false,
                     "interval": "",
@@ -992,7 +992,7 @@
     "schemaVersion": 26,
     "style": "dark",
     "tags": [
-        "netbox",
+        "nautobot",
         "app_metrics"
     ],
     "templating": {
@@ -1017,7 +1017,7 @@
         ]
     },
     "timezone": "",
-    "title": "Netbox Application Metrics",
+    "title": "Nautobot Application Metrics",
     "uid": "CS1NJwSGk",
     "version": 1
 }

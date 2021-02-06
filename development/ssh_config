@@ -1,0 +1,6 @@
+Host grimlock github.com
+    HostName github.com
+    IdentityFile ~/.ssh/deployment_keys/grimlock
+    User git
+    StrictHostKeyChecking no
+    UserKnownHostsFile=/dev/null

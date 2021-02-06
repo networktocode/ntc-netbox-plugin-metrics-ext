@@ -1,4 +1,4 @@
-"""Plugin declaration for netbox_metrics_ext."""
+"""Plugin declaration for nautobot_metrics_ext."""
 
 __version__ = "1.0.0"
 
@@ -25,13 +25,13 @@ def register_metric_func(func):
 
 
 class MetricsExtConfig(PluginConfig):
-    """Plugin configuration for the netbox_metrics_ext plugin."""
+    """Plugin configuration for the nautobot_metrics_ext plugin."""
 
-    name = "netbox_metrics_ext"
+    name = "nautobot_metrics_ext"
     verbose_name = "Metrics & Monitoring Extension Plugin"
     version = __version__
     author = "Network to Code, LLC"
-    description = "Plugin to improve the instrumentation of NetBox and expose additional metrics (Application Metrics, RQ Worker)."
+    description = "Plugin to improve the instrumentation of Nautobot and expose additional metrics (Application Metrics, RQ Worker)."
     base_url = "metrics-ext"
     required_settings = []
     min_version = "2.8.1"

@@ -1,4 +1,4 @@
-"""Test cases for netbox_metrics_ext views."""
+"""Test cases for nautobot_metrics_ext views."""
 
 from django.test import TestCase
 from django.urls import reverse
@@ -11,7 +11,7 @@ class AppMetricEndpointTests(TestCase):
 
     def setUp(self):
         """Basic setup to create API client for test case."""
-        self.app_metric_url = reverse("plugins-api:netbox_metrics_ext-api:netbox_metrics_ext_app_view")
+        self.app_metric_url = reverse("plugins-api:nautobot_metrics_ext-api:nautobot_metrics_ext_app_view")
         self.client = APIClient()
 
     def test_endpoint(self):

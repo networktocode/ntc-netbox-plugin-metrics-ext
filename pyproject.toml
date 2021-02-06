@@ -1,19 +1,19 @@
 [tool.poetry]
-name = "ntc-netbox-plugin-metrics-ext"
+name = "ntc-nautobot-plugin-metrics-ext"
 version = "1.0.0"
-description = "Plugin to improve the instrumentation of NetBox and expose additional metrics (Application Metrics, RQ Worker)."
+description = "Plugin to improve the instrumentation of Nautobot and expose additional metrics (Application Metrics, RQ Worker)."
 authors = ["Network to Code, LLC <info@networktocode.com>"]
 license = "Apache-2.0"
 readme = "README.md"
-homepage = "https://github.com/networktocode/ntc-netbox-plugin-metrics-ext"
-repository = "https://github.com/networktocode/ntc-netbox-plugin-metrics-ext"
-keywords = ["netbox", "netbox-plugin"]
+homepage = "https://github.com/networktocode/ntc-nautobot-plugin-metrics-ext"
+repository = "https://github.com/networktocode/ntc-nautobot-plugin-metrics-ext"
+keywords = ["nautobot", "nautobot-plugin"]
 include = [
     "LICENSE",
     "README.md",
 ]
 packages = [
-    { include = "netbox_metrics_ext" },
+    { include = "nautobot_metrics_ext" },
 ]
 
 [tool.poetry.dependencies]
@@ -53,4 +53,3 @@ exclude = '''
 [build-system]
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
-

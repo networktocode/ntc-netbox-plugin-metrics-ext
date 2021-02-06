@@ -8,11 +8,11 @@ from django.http import HttpResponse
 import prometheus_client
 from prometheus_client.core import CollectorRegistry, GaugeMetricFamily
 
-from netbox_metrics_ext import __REGISTRY__
-from netbox_metrics_ext.metrics import collect_extras_metric, metric_reports, metric_models, metric_rq
+from nautobot_metrics_ext import __REGISTRY__
+from nautobot_metrics_ext.metrics import collect_extras_metric, metric_reports, metric_models, metric_rq
 
 logger = logging.getLogger(__name__)
-PLUGIN_SETTINGS = settings.PLUGINS_CONFIG["netbox_metrics_ext"]["app_metrics"]
+PLUGIN_SETTINGS = settings.PLUGINS_CONFIG["nautobot_metrics_ext"]["app_metrics"]
 
 
 class CustomCollector:
@@ -43,7 +43,9 @@ class CustomCollector:
         for metric in collect_extras_metric(__REGISTRY__):
             yield metric
 
-        gauge = GaugeMetricFamily("netbox_app_metrics_processing_ms", "Time in ms to generate the app metrics endpoint")
+        gauge = GaugeMetricFamily(
+            "nautobot_app_metrics_processing_ms", "Time in ms to generate the app metrics endpoint"
+        )
         duration = time.time() - start
         gauge.add_metric([], format(duration * 1000, ".5f"))
         yield gauge

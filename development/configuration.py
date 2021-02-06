@@ -1,4 +1,4 @@
-"""NetBox configuration."""
+"""Nautobot configuration."""
 import os
 from distutils.util import strtobool
 from django.core.exceptions import ImproperlyConfigured
@@ -35,8 +35,8 @@ def is_truthy(arg):
     return bool(strtobool(arg))
 
 
-# For reference see http://netbox.readthedocs.io/en/latest/configuration/mandatory-settings/
-# Based on https://github.com/digitalocean/netbox/blob/develop/netbox/netbox/configuration.example.py
+# For reference see http://nautobot.readthedocs.io/en/latest/configuration/mandatory-settings/
+# Based on https://github.com/digitalocean/nautobot/blob/develop/nautobot/nautobot/configuration.example.py
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -46,10 +46,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 #                       #
 #########################
 
-# This is a list of valid fully-qualified domain names (FQDNs) for the NetBox server. NetBox will not permit write
+# This is a list of valid fully-qualified domain names (FQDNs) for the Nautobot server. Nautobot will not permit write
 # access to the server via any other hostnames. The first FQDN in the list will be treated as the preferred name.
 #
-# Example: ALLOWED_HOSTS = ['netbox.example.com', 'netbox.internal.local']
+# Example: ALLOWED_HOSTS = ['nautobot.example.com', 'nautobot.internal.local']
 ALLOWED_HOSTS = os.environ["ALLOWED_HOSTS"].split(" ")
 
 # PostgreSQL database configuration.
@@ -64,7 +64,7 @@ DATABASE = {
 
 # This key is used for secure generation of random numbers and strings. It must never be exposed outside of this file.
 # For optimal security, SECRET_KEY should be at least 50 characters in length and contain a mix of letters, numbers, and
-# symbols. NetBox will not run without this defined. For more information, see
+# symbols. Nautobot will not run without this defined. For more information, see
 # https://docs.djangoproject.com/en/dev/ref/settings/#std:setting-SECRET_KEY
 SECRET_KEY = os.environ["SECRET_KEY"]
 
@@ -89,13 +89,13 @@ REDIS = {
 }
 
 if VERSION.startswith("2.8."):
-    # NetBox 2.8.x Specific Settings
+    # Nautobot 2.8.x Specific Settings
     REDIS["caching"]["DEFAULT_TIMEOUT"] = 300
     REDIS["tasks"]["DEFAULT_TIMEOUT"] = 300
 elif VERSION.startswith("2.9.") or VERSION.startswith("2.10."):
     RQ_DEFAULT_TIMEOUT = 300
 else:
-    raise ImproperlyConfigured(f"Version {VERSION} of NetBox is unsupported at this time.")
+    raise ImproperlyConfigured(f"Version {VERSION} of Nautobot is unsupported at this time.")
 
 #########################
 #                       #
@@ -103,7 +103,7 @@ else:
 #                       #
 #########################
 
-# Specify one or more name and email address tuples representing NetBox administrators. These people will be notified of
+# Specify one or more name and email address tuples representing Nautobot administrators. These people will be notified of
 # application errors (assuming correct email settings are provided).
 ADMINS = [
     # ['John Doe', 'jdoe@example.com'],
@@ -117,8 +117,8 @@ BANNER_BOTTOM = os.environ.get("BANNER_BOTTOM", "")
 # Text to include on the login page above the login form. HTML is allowed.
 BANNER_LOGIN = os.environ.get("BANNER_LOGIN", "")
 
-# Base URL path if accessing NetBox within a directory. For example, if installed at http://example.com/netbox/, set:
-# BASE_PATH = 'netbox/'
+# Base URL path if accessing Nautobot within a directory. For example, if installed at http://example.com/nautobot/, set:
+# BASE_PATH = 'nautobot/'
 BASE_PATH = os.environ.get("BASE_PATH", "")
 
 # Maximum number of days to retain logged changes. Set to 0 to retain changes indefinitely. (Default: 90)
@@ -152,14 +152,14 @@ EMAIL = {
 # set ENFORCE_GLOBAL_UNIQUE to True.
 ENFORCE_GLOBAL_UNIQUE = is_truthy(os.environ.get("ENFORCE_GLOBAL_UNIQUE", False))
 
-# HTTP proxies NetBox should use when sending outbound HTTP requests (e.g. for webhooks).
+# HTTP proxies Nautobot should use when sending outbound HTTP requests (e.g. for webhooks).
 # HTTP_PROXIES = {
 #     "http": "http://192.0.2.1:3128",
 #     "https": "http://192.0.2.1:1080",
 # }
 
 # IP addresses recognized as internal to the system. The debugging toolbar will be available only to clients accessing
-# NetBox from an internal IP.
+# Nautobot from an internal IP.
 INTERNAL_IPS = ("127.0.0.1", "::1")
 
 LOG_LEVEL = os.environ.get("LOG_LEVEL", "DEBUG" if DEBUG else "INFO")
@@ -180,8 +180,8 @@ LOGGING = {
     "root": {"handlers": ["console"], "level": LOG_LEVEL},
 }
 
-# Setting this to True will permit only authenticated users to access any part of NetBox. By default, anonymous users
-# are permitted to access most data in NetBox (excluding secrets) but not make any changes.
+# Setting this to True will permit only authenticated users to access any part of Nautobot. By default, anonymous users
+# are permitted to access most data in Nautobot (excluding secrets) but not make any changes.
 LOGIN_REQUIRED = is_truthy(os.environ.get("LOGIN_REQUIRED", False))
 
 # Setting this to True will display a "maintenance mode" banner at the top of every page.
@@ -216,7 +216,7 @@ NAPALM_ARGS = {
 PAGINATE_COUNT = int(os.environ.get("PAGINATE_COUNT", 50))
 
 # Enable installed plugins. Add the name of each plugin to the list.
-PLUGINS = ["netbox_metrics_ext"]
+PLUGINS = ["nautobot_metrics_ext"]
 
 # Plugins configuration settings. These settings are used by various plugins that the user may have installed.
 # Each key in the dictionary is the name of an installed plugin and its value is a dictionary of settings.
@@ -233,22 +233,22 @@ REMOTE_AUTH_AUTO_CREATE_USER = True
 REMOTE_AUTH_DEFAULT_GROUPS = []
 
 if VERSION.startswith("2.8."):
-    # NetBox 2.8.x Specific Settings
+    # Nautobot 2.8.x Specific Settings
     REMOTE_AUTH_BACKEND = "utilities.auth_backends.RemoteUserBackend"
     REMOTE_AUTH_DEFAULT_PERMISSIONS = []
 elif VERSION.startswith("2.9.") or VERSION.startswith("2.10."):
     REMOTE_AUTH_BACKEND = "netbox.authentication.RemoteUserBackend"
     REMOTE_AUTH_DEFAULT_PERMISSIONS = {}
 else:
-    raise ImproperlyConfigured(f"Version {VERSION} of NetBox is unsupported at this time.")
+    raise ImproperlyConfigured(f"Version {VERSION} of Nautobot is unsupported at this time.")
 
-# This determines how often the GitHub API is called to check the latest release of NetBox. Must be at least 1 hour.
+# This determines how often the GitHub API is called to check the latest release of Nautobot. Must be at least 1 hour.
 RELEASE_CHECK_TIMEOUT = 24 * 3600
 
-# This repository is used to check whether there is a new release of NetBox available. Set to None to disable the
-# version check or use the URL below to check for release in the official NetBox repository.
+# This repository is used to check whether there is a new release of Nautobot available. Set to None to disable the
+# version check or use the URL below to check for release in the official Nautobot repository.
 RELEASE_CHECK_URL = None
-# RELEASE_CHECK_URL = 'https://api.github.com/repos/netbox-community/netbox/releases'
+# RELEASE_CHECK_URL = 'https://api.github.com/repos/nautobot-community/nautobot/releases'
 
 SESSION_FILE_PATH = None
 
