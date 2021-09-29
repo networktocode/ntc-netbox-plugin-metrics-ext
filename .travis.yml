@@ -11,10 +11,7 @@ env:
   - NETBOX_VER=v2.8.9
   - NETBOX_VER=v2.9.11
   - NETBOX_VER=v2.10.4
-# Encrypted value for PYPI_TOKEN, this secret has been generated with the following command
-#   travis encrypt PYPI_TOKEN=<value> --add env.global --com
-  global:
-    secure: SXqOs5f4RfJJic6H7D6tdrnpXftymdGJCCrDZxcU/I22g+NZLzGJjtSd3dReDlx1tHFnv3lv80OSPqIg/J2xQxCyJThIdi7zfnwqMLJJ3kDIMlwfRZVfmSDXAMmMs87wjuDsJIyDp1omNNEz5GGQb7MNyZqBE12ibQ+dTdKzI8v8+AhQCx0r49hKgbkBIsHYp8ITh2T8x+wNJmfuaQYxd6NzxCXTdR3I3zg2WdAFh+DgHl6rn3mDZoIJJV6cxQd07hUYTRKzvsD/o+2lCsOWHghNUT3CkJEMSwi5TbNdaFNFrEBL2dUSkZmqzjuxZthhtLaZUrjz7B666br98IQqHMsk7sBVRg3HJ4slWjZ0eqpBmsQ7yJtCy6KSkYalTk7TbBVIXvpz586qMBW4KrD2vgUnapKk35Fqz6IVJorNNU9u0ovEEG7HdwtjJ1idkbS3SmHz8OTztrc5aXteHQIGDdGyVZ9XiXdbbZn9uozTAu5QBO1e+qVXWRY4IouQ7hMQfPi+G3C/mXMUVzA5irvHEyLJrh5z1YdxuvpAFAMWKi8ztsJTECu2VNRX1VzeQtycwVhHKHfz1nLo1iDTPN4rZLTx2gthZimWn3OIAReS0nNYMxTlwFq41n03eAVh+JF1YemPDtWFsq4LK6tRBLbEedFZ5QcESpjXMl3TyNawzLo=
+
 services:
 - docker
 # --------------------------------------------------------------------------
