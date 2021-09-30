@@ -51,7 +51,7 @@ def metric_reports():
         Iterator[GaugeMetricFamily]
             netbox_report_stats: with report module, name and status as labels
     """
-    if netbox_version.major >= 2 and netbox_version.minor >= 9:
+    if netbox_version >= version.parse("2.9.0"):
         from django.contrib.contenttypes.models import ContentType  # pylint: disable=import-outside-toplevel
         from extras.models import Report, JobResult  # pylint: disable=import-outside-toplevel,no-name-in-module
 
